@@ -1,0 +1,12 @@
+{
+  "name": "execute",
+  "syntax": "execute <subcommands> run <command>",
+  "requires": ["run"],
+  "errors": [
+    {
+      "ifMissing": "run",
+      "message": "execute must include run"
+    }
+  ],
+  "color": "keyword"
+}
