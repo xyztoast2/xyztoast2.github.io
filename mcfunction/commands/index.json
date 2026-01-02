@@ -1,0 +1,9 @@
+{
+  "commands": [
+    "execute",
+    "fill",
+    "scoreboard",
+    "tp",
+    "say"
+  ]
+}
