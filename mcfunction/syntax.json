@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "keywords": [
+    "execute",
+    "run",
+    "if",
+    "unless",
+    "fill",
+    "scoreboard",
+    "tp",
+    "say"
+  ],
+  "selectors": ["@p", "@a", "@r", "@s", "@e", "@n"],
+  "comment": "#",
+  "numberRegex": "-?\\d+",
+  "stringRegex": "\"[^\"]*\""
+}
