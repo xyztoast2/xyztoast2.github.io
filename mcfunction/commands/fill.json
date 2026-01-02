@@ -1,6 +1,6 @@
 {
   "name": "fill",
-  "syntax": "fill <x1> <y1> <z1> <x2> <y2> <z2> <block>",
+  "syntax": "fill <x1> <y1> <y1> <y2> <z2> <z2> <block>",
   "minArgs": 7,
   "color": "keyword"
 }
