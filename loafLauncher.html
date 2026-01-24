@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>loafLauncher</title>
+<style>
+:root {
+  --accent: #00b2ff;
+  --bg: #212425;
+  --panel: #323738;
+  --text: #e6e6e6;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.tab-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background: var(--panel);
+  padding: 6px 6px 0;
+  gap: 6px;
+}
+
+.tab {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  background: #2a2e31;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 4px;
+  background: var(--bg);
+}
+
+.tab.active {
+  background: var(--bg);
+}
+
+.tab.active::after {
+  background: var(--bg);
+}
+
+.tab:hover {
+  background: #3a3f44;
+}
+
+.content {
+  background: var(--bg);
+  margin-top: -3px;
+  padding: 20px;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+.big-button {
+  display: block;
+  width: 300px;
+  max-width: 90%;
+  margin: 40px auto;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text);
+  background: var(--accent);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.big-button:hover {
+  background: #0096e0;
+}
+
+#packList {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 10px;
+  background: #2a2e31;
+  border-radius: 8px;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.pack-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid #3a3f44;
+}
+
+#customPackage {
+  display: block;
+  width: 300px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 8px;
+  background: #2a2e31;
+  color: var(--text);
+  border: none;
+  font-size: 16px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="tab-bar">
+  <div class="tab active" data-tab="home">home</div>
+  <div class="tab" data-tab="mods">mods</div>
+  <div class="tab" data-tab="settings">settings</div>
+</div>
+
+<div class="content">
+  <div class="panel active" data-panel="home">
+    <button class="big-button" id="launchMC">Launch Minecraft</button>
+  </div>
+  <div class="panel" data-panel="mods">
+    <label for="fileInput" class="big-button" id="importPacks">Import Packs</label>
+    <input type="file" id="fileInput" multiple accept=".mcaddon,.mcpack" style="display:none;">
+    <div id="packList"></div>
+  </div>
+  <div class="panel" data-panel="settings">
+    <input type="text" id="customPackage" placeholder="Enter package name (default: com.mojang.minecraftpe)">
+  </div>
+</div>
+
+<script>
+let importQueue = [];
+let packageName = 'com.mojang.minecraftpe';
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const id = tab.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector(`[data-panel="${id}"]`).classList.add('active');
+  });
+});
+
+document.getElementById('launchMC').addEventListener('click', () => {
+  if (window.Android) {
+    window.Android.launchApp(packageName, importQueue.map(f => f.name));
+  } else {
+    alert('Would launch ' + packageName + ' with ' + importQueue.length + ' packs.');
+  }
+});
+
+const fileInput = document.getElementById('fileInput');
+const packList = document.getElementById('packList');
+
+fileInput.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files);
+  importQueue.push(...files);
+  renderPackList();
+});
+
+function renderPackList() {
+  packList.innerHTML = '';
+  importQueue.forEach(file => {
+    const div = document.createElement('div');
+    div.className = 'pack-item';
+    let name = file.name.replace(/\.(mcpack|mcaddon)$/i, '');
+    let sizeKB = (file.size / 1024).toFixed(1) + ' KB';
+    let type = file.name.endsWith('.mcpack') ? 'mcpack' : 'mcaddon';
+    div.innerHTML = `<span>${name}</span><span>${sizeKB}</span><span>${type}</span>`;
+    packList.appendChild(div);
+  });
+}
+
+const customPackage = document.getElementById('customPackage');
+customPackage.addEventListener('input', () => {
+  packageName = customPackage.value || 'com.mojang.minecraftpe';
+});
+</script>
+
+</body>
+</html>
