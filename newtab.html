@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-overlay: rgba(0, 0, 0, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
+            --accent-blue: #4285f4;
+        }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: #131314;
+            color: var(--text-color);
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Wallpaper logic */
+        #wallpaper-container {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #wallpaper-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: var(--bg-overlay);
+        }
+
+        .gradient-text {
+            background: linear-gradient(74deg, #4285f4 0%, #9b72cb 30%, #d96570 60%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Glassmorphism Search Bar */
+        .input-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-container:focus-within {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(66, 133, 244, 0.5);
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .header-icon {
+            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+        }
+        .header-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #send-btn {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Layer -->
+    <div id="wallpaper-container"></div>
+    <div id="wallpaper-overlay"></div>
+
+    <!-- Top Navigation Header -->
+    <header class="p-6 flex justify-end items-center w-full gap-3 relative z-10">
+        <a href="https://myactivity.google.com/myactivity" target="_blank" class="header-icon p-2.5 rounded-full flex items-center justify-center" title="Search History">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </a>
+        <a href="https://drive.google.com/drive/my-drive" target="_blank" class="header-icon p-2.5 rounded-full flex items-center justify-center" title="Google Drive">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        </a>
+        <a href="https://github.com" target="_blank" class="header-icon p-2.5 rounded-full flex items-center justify-center" title="GitHub">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+        <div class="ml-2 w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold cursor-pointer text-sm border-2 border-white/20 shadow-lg">G</div>
+    </header>
+
+    <!-- Center Content -->
+    <main class="flex-1 flex flex-col items-center justify-center px-6 -mt-16 relative z-10">
+        <div class="w-full max-w-2xl mb-10 text-center">
+            <h1 class="text-6xl font-medium mb-3 gradient-text" id="greeting">Good afternoon</h1>
+            <h2 class="text-3xl font-medium text-white/70">Search with Google</h2>
+        </div>
+
+        <!-- The Search Bar -->
+        <div class="w-full max-w-2xl">
+            <div class="input-container p-5 flex flex-col gap-2">
+                <textarea id="main-input" rows="1" placeholder="Type your search here..." class="bg-transparent border-none outline-none resize-none text-xl w-full text-white placeholder-white/50" autofocus></textarea>
+                <div class="flex justify-end items-center mt-1">
+                    <button id="send-btn" class="p-2 bg-white/10 rounded-full text-white/30 cursor-default">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <p class="text-center text-[12px] text-white/40 mt-8 tracking-widest uppercase">Safe • Secure • Google Search</p>
+        </div>
+    </main>
+
+    <script>
+        const textarea = document.getElementById('main-input');
+        const sendBtn = document.getElementById('send-btn');
+        const wallpaper = document.getElementById('wallpaper-container');
+
+        // Random Landscape Wallpaper
+        const landscapes = [
+            'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1434725039720-abb26e22ebe1?q=80&w=2000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop'
+        ];
+
+        function setRandomWallpaper() {
+            const randomImg = landscapes[Math.floor(Math.random() * landscapes.length)];
+            wallpaper.style.backgroundImage = `url('${randomImg}')`;
+        }
+
+        // Textarea behavior
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+            
+            if (textarea.value.trim().length > 0) {
+                sendBtn.classList.remove('bg-white/10', 'text-white/30', 'cursor-default');
+                sendBtn.classList.add('bg-blue-500', 'text-white', 'cursor-pointer', 'shadow-lg');
+            } else {
+                sendBtn.classList.add('bg-white/10', 'text-white/30', 'cursor-default');
+                sendBtn.classList.remove('bg-blue-500', 'text-white', 'cursor-pointer', 'shadow-lg');
+            }
+        });
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const query = textarea.value.trim();
+                if (query) {
+                    // Redirect to actual Google Search with the query
+                    window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        // Click handler for the send button
+        sendBtn.addEventListener('click', () => {
+            const query = textarea.value.trim();
+            if (query) {
+                window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            }
+        });
+
+        window.onload = () => {
+            setRandomWallpaper();
+            
+            const hour = new Date().getHours();
+            let greet = "Good evening";
+            if (hour < 12) greet = "Good morning";
+            else if (hour < 18) greet = "Good afternoon";
+            document.getElementById('greeting').textContent = greet;
+            
+            textarea.focus();
+        };
+    </script>
+</body>
+</html>
